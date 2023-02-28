@@ -19,6 +19,7 @@ These Scripts must be used in conjunction with the ORM that was developed for th
 Script to import the crop data, as well as the corresponding subgroups into the database
 
 **Inputs**
+
 file CSV
 
 -----------
@@ -44,4 +45,5 @@ Script to import accession data into the database
 ### Import Raster
 
 **Inputs**
+
 Rasters in geotiff format
