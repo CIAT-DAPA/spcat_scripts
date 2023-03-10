@@ -90,7 +90,7 @@ if(os.path.isfile(os.path.join(c.path_inputs, "groups.csv"))):
         try:
             crop = Crop.objects.get(ext_id=str(row['crop']))
 
-            if crop :
+            if crop is not None:
 
                 # Create a Group object with the row data
                 group = Group(
