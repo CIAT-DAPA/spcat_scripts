@@ -8,6 +8,9 @@ path_inputs = os.path.abspath(os.path.join(dir_path, 'Inputs'))
 path_outputs = os.path.abspath(os.path.join(dir_path, 'Outputs'))
 path_database = os.path.abspath(os.path.join(dir_path, 'database.xlsx'))
 
+if not os.path.exists(path_outputs):
+    os.mkdir(path_outputs)
+
 try:
     database = pd.read_excel(path_database)
 except Exception as e:
