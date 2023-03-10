@@ -16,7 +16,7 @@ print('The process of importing accessions has begun')
 
 #accession_files = glob.glob(os.path.join(c.path_inputs, "*_accession.csv"))
 
-accession_files = glob.glob(c.path_inputs + '/*_accession.csv')
+accession_files = glob.glob(c.path_inputs + '/*accession.csv')
 accession_file_names = [os.path.basename(file) for file in accession_files]
 
 if not len(accession_files) == 0:
@@ -41,13 +41,13 @@ if not len(accession_files) == 0:
 
                 crop = Crop.objects.get(ext_id=str(row['crop']))
 
-                if crop :
+                if crop is not None:
 
                     group = Group.objects.get(ext_id=str(row['landrace_group']))
 
-                    if group :
+                    if group is not None:
 
-                        # Create a Country object with the row data
+                        # Create a Accession object with the row data
                         accession = Accession(
                             ext_id=str(row['ext_id']).strip(),
                             species_name=str(row['species_name']).strip(),
@@ -106,6 +106,78 @@ if not len(accession_files) == 0:
         else:
             print("No errors found") 
 else: 
-    print('No accessions file found')
+    print('Could not find accession.csv file')
 
 
+attributes_files = glob.glob(c.path_inputs + '/*attribute.csv')
+attributes_file_names = [os.path.basename(file) for file in attributes_files]
+
+print('The process of importing attributes of accessions has begun')
+
+if not len(attributes_files) == 0:
+
+    for file in attributes_file_names:
+
+        print(f'{file} file found')
+        attributes = pd.read_csv(os.path.join(c.path_inputs, file),  encoding='utf8', keep_default_na=False)
+        
+
+        # Create a dataframe to store errors
+        errores = pd.DataFrame(columns=['key', 'value', 'accession', 'row', 'error'])
+
+        # Initialize counters
+        success_count = 0
+        error_count = 0
+
+        # Traverse each row of the DataFrame
+        for index, row in attributes.iterrows():
+            
+            try:
+
+                accession = Accession.objects.get(ext_id=str(row['accession']))
+
+                if accession is not None:
+                    # add attribute to the accession found
+                    accession.other_attributes[str(row['key']).strip()] = str(row['value']).strip()
+
+                    # Save the object in the database
+                    accession.save()
+
+                    # Increment success counter
+                    success_count += 1
+                else:
+                    errores = pd.concat([errores, pd.DataFrame(data={'key': [str(row['key'])], 'value': [str(row['value'])], 'accession': [str(row['accession'])], 'row': [str(index + 2)],
+                        'error': ['no accession was found with that ext_id: ' + str(row['accession'])]})], ignore_index=True)
+
+                    # Increment error counter
+                    error_count += 1
+
+
+            except Exception as e:
+                #print('Errors found in row #' + str(index + 2) + ', ext_id:' + str(row['ext_id']) + ', name:' + str(row['name']))
+                
+                # Add the row with the error to the error dataframe
+                errores = pd.concat([errores, pd.DataFrame(data={'key': [str(row['key'])], 'value': [str(row['value'])], 'accession': [str(row['accession'])], 
+                    'row': [str(index + 2)], 'error': [str(e)]})], ignore_index=True)
+                
+                # Increment error counter
+                error_count += 1
+
+        # Print results
+        print(f"Processed {success_count + error_count} rows.")
+        print(f"Successfully saved {success_count} rows.")
+        print(f"Failed to save {error_count} rows.")
+
+        # Saving the error dataframe in an Excel file
+        if not errores.empty:
+            file_name = str(file).replace(".csv", "")
+            try:
+                errores.to_excel(os.path.join(c.path_outputs, f"{file_name}_logs.xlsx"), index=False)
+                print(f"Errors found, {file_name}_logs.xlsx file saved")
+            except Exception as e:            
+                print(f"Errors found, but the file {file_name}_logs.xlsx could not be saved. Error:")
+                print(e)
+        else:
+            print("No errors found") 
+else: 
+    print('Could not find attribute.csv file') 
