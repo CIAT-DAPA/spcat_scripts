@@ -108,7 +108,7 @@ file groups.csv
 
 **Outputs**
 
-file crop_logs.xlxs
+file crop_logs.xlsx
 
 | Column Name | Description                   |
 |-------------|-------------------------------|
@@ -118,7 +118,7 @@ file crop_logs.xlxs
 | app_name    | Application name of the crop. |
 | error       | Error message that occurred while saving |
 
-file group_logs.xlxs
+file group_logs.xlsx
 
 | Column Name | Description |
 |-------------|-------------|
@@ -145,7 +145,7 @@ file countries.csv
 
 **Outputs**
 
-file country_logs.xlxs
+file country_logs.xlsx
 
 | Column Name | Description |
 |-------------|--------------------------------------------------------------|
@@ -172,7 +172,7 @@ file {crop}_accession.csv
 | source_database  | string  | Name of the database where the accession was originally stored. Optional. |
 | latitude         | float   | Latitude of the geographical location where the accession was collected. Mandatory. |
 | longitude        | float   | Longitude of the geographical location where the accession was collected. Mandatory. |
-| accession_id     | string  | Unique identifier of the accession. Optional.               |
+| accession_id     | string  | Identifier of the accession in the source database. Optional.               |
 | ext_id           | string  | External identifier for the accession. Mandatory and unique.|
 
 file {crop}_attribute.csv
@@ -185,7 +185,7 @@ file {crop}_attribute.csv
 
 **Outputs**
 
-file {crop}_accession_logs.xlxs
+file {crop}_accession_logs.xlsx
 
 | Column Name  | Description                              |
 |--------------|------------------------------------------|
@@ -194,7 +194,7 @@ file {crop}_accession_logs.xlxs
 | row          | row in which the accession is located in the original file |
 | error        | Error message that occurred while saving |
 
-file {crop}_attribute_logs.xlxs
+file {crop}_attribute_logs.xlsx
 
 | Column Name | Description                                                 |
 |-------------|-------------------------------------------------------------|
