@@ -53,8 +53,15 @@ source env/bin/activate
 ````sh
 env\Scripts\activate.bat
 ````
+4. run this commands in order
 
-4. Install the required packages
+- `pip install pipwin`: Install pipwin.
+- `pipwin refresh`: refres pipwin.
+- `pipwin install gdal`: Install GDAL library.
+- `pip install geoserver-rest`: Install geoserver-rest library.
+
+
+5. Install the required packages
 
 ````sh
 pip install -r requirements.txt
