@@ -8,7 +8,7 @@ geoserver_url = 'http://127.0.0.1:8080/geoserver'
 username = 'admin'
 password = 'geoserver'
 description=''
-workspace = 'oli4' #the workspace must exist on the geoserver
+workspace = 'hola' #the workspace must exist on the geoserver
 image_directory = 'C:/ScripRaster/raster'
 
 # create a geoserver instance
