@@ -9,8 +9,7 @@ username = 'admin'
 password = 'geoserver'
 description=''
 workspace = 'hola' #the workspace must exist on the geoserver
-image_directory = 'C:/ScripRaster/raster'
-
+image_directory = '../rasters'
 # create a geoserver instance
 geo = Geoserver(geoserver_url, username=username, password=password)
 

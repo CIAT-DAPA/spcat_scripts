@@ -67,6 +67,7 @@ env\Scripts\activate.bat
 pip install -r requirements.txt
 ````
 
+
 ## Usage
 
 For the import of the data the scripts use different csv files from where the information will be imported and must be provided by the user, these files must be located in the `src/Inputs` folder, also a configuration file is used for the access information to the database which is `database.xlsx` this information must be configured by the user before starting the import process. If during the import of the data an error is generated with any of the data this information will be saved in excel files identified with the model name [model]_logs.xlsx for example `crop_logs.xlsx` this process does not stop the import, that is to say the error will be saved and the import of the rest of the data will continue. These log files will be stored in the `scr\Outputs` folder.
@@ -217,4 +218,19 @@ file {crop}_attribute_logs.xlsx
 
 **Inputs**
 
-Rasters in geotiff format
+`import_raster.py` Script to import raster files in geotiff format to a server (geoserver), this script goes to a folder where the raster files will be stored, the script generates a connection to the geoserver, reads each file in the folder and publishes them to the geoserver.
+This script uses certain variables that must be modified by the user, which are listed below:
+
+- `geoserver_url`: here you will put the url where your geoserver is hosted, for example: `http://127.0.0.1:8080/geoserver`
+- `username`: username with which you enter the goserver, for example: `admin`
+- `password`: password with which you enter the goserver, for example: `geoserver`
+- `workspace`: workspace of the geoserver to which you want the raster files to be published, for example: `my_workspace`  this workspace must be previously created on the geoserver
+- `image_directory`: here you will put the path where the folder with the raster files is located, you can use an absolute path, for example: `C:/ScripRaster/raster` or you can use a relative path if you want to place the folder inside the project, for example: `../rasters` 
+
+**Outputs**
+
+After you have configured everything, you can run the file, with the python command `import_raster.py` If everything is correct in the console, the following messages will be printed, `number of files in the folder` rasters have been uploaded to the Geoserver and Failed to upload `number of files that failed to import` rasters.
+
+A.fter this you can verify that the files have been uploaded successfully in the layer preview window on your geoserver
+
+If there is an error in the import, a file named `erros_logs.xlsx` will be created with the error description.
