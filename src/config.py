@@ -24,8 +24,8 @@ cols_group = ['group_name', 'crop', 'ext_id']
 cols_accession = ['species_name', 'crop', 'landrace_group', 'institution_name', 'source_database', 'latitude', 'longitude', 'accession_id']
 
 
-def get_parameter(name):    
-    value = database[database.parameter == name].iloc[0]['value'] 
+def get_parameter(name, df=database):
+    value = df[df.parameter == name].iloc[0]['value']
     return str(value)
 
 def connect_db():
