@@ -4,7 +4,7 @@ import requests
 
 geoserver_url = 'https://isa.ciat.cgiar.org/geoserver2'
 username = 'gapuser'
-password = 'G4pUs3.R-2023am'
+password = 'pass'
 
 # create a geoserver instance
 geo = Geoserver(geoserver_url, username=username, password=password)
