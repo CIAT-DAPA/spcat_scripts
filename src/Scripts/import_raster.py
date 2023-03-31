@@ -5,8 +5,8 @@ from geo.Geoserver import Geoserver
 import os
 #geoserver data
 geoserver_url = 'https://isa.ciat.cgiar.org/geoserver2'
-username = 'gapuser'
-password = 'G4pUs3.R-2023am'
+username = 'user'
+password = 'pass'
 description=''
 workspace = 'gap_analysis' #the workspace must exist on the geoserver
 image_directory = 'C:/array'
