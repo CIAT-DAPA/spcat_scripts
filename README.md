@@ -231,6 +231,6 @@ This script uses certain variables that must be modified by the user, which are 
 
 After you have configured everything, you can run the file, with the python command `import_raster.py` If everything is correct in the console, the following messages will be printed, `number of files in the folder` rasters have been uploaded to the Geoserver and Failed to upload `number of files that failed to import` rasters.
 
-A.fter this you can verify that the files have been uploaded successfully in the layer preview window on your geoserver
+After this you can verify that the files have been uploaded successfully in the layer preview window on your geoserver
 
 If there is an error in the import, a file named `erros_logs.xlsx` will be created with the error description.

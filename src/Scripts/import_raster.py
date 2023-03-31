@@ -4,12 +4,12 @@ import openpyxl
 from geo.Geoserver import Geoserver
 import os
 #geoserver data
-geoserver_url = 'http://127.0.0.1:8080/geoserver'
-username = 'admin'
-password = 'geoserver'
+geoserver_url = 'https://isa.ciat.cgiar.org/geoserver2'
+username = 'gapuser'
+password = 'G4pUs3.R-2023am'
 description=''
-workspace = 'hola' #the workspace must exist on the geoserver
-image_directory = '../rasters'
+workspace = 'gap_analysis' #the workspace must exist on the geoserver
+image_directory = 'C:/array'
 # create a geoserver instance
 geo = Geoserver(geoserver_url, username=username, password=password)
 
