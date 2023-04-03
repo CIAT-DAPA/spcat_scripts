@@ -8,7 +8,8 @@ sys.path.append(config_dir_path)
 
 import config as c
 import pandas as pd
-from ormgap import Crop, Group, Accession
+from tqdm import tqdm
+from ormgap import Crop, Group, Accession, Country
 
 c.connect_db()
 
@@ -35,7 +36,7 @@ if not len(accession_files) == 0:
         error_count = 0
 
         # Traverse each row of the DataFrame
-        for index, row in accessions.iterrows():
+        for index, row in tqdm(accessions.iterrows(), total=len(accessions)):
             
             try:
 
@@ -47,24 +48,35 @@ if not len(accession_files) == 0:
 
                     if group is not None:
 
-                        # Create a Accession object with the row data
-                        accession = Accession(
-                            ext_id=str(row['ext_id']).strip(),
-                            species_name=str(row['species_name']).strip(),
-                            crop=crop,
-                            landrace_group=group,
-                            institution_name=str(row['institution_name']).strip(),
-                            source_database=str(row['source_database']).strip(),
-                            latitude=row['latitude'],
-                            longitude=row['longitude'],
-                            accession_id=str(row['accession_id']).strip()
-                        )
-                
-                        # Save the object in the database
-                        accession.save()
+                        country = Country.objects.get(iso_2=str(row['country']))
 
-                        # Increment success counter
-                        success_count += 1
+                        if country is not None:
+
+                            # Create a Accession object with the row data
+                            accession = Accession(
+                                ext_id=str(row['ext_id']).strip(),
+                                species_name=str(row['species_name']).strip(),
+                                crop=crop,
+                                country=country,
+                                landrace_group=group,
+                                institution_name=str(row['institution_name']).strip(),
+                                source_database=str(row['source_database']).strip(),
+                                latitude=row['latitude'],
+                                longitude=row['longitude'],
+                                accession_id=str(row['accession_id']).strip()
+                            )
+                
+                            # Save the object in the database
+                            accession.save()
+
+                            # Increment success counter
+                            success_count += 1
+                        else: 
+                            errores = pd.concat([errores, pd.DataFrame(data={'ext_id': [str(row['ext_id'])], 'species_name': [str(row['species_name'])], 'row': [str(index + 2)],
+                                'error': ['no country was found with that iso_2: ' + str(row['country'])]})], ignore_index=True)
+                                
+                            # Increment error counter
+                            error_count += 1
                     else:
                         errores = pd.concat([errores, pd.DataFrame(data={'ext_id': [str(row['ext_id'])], 'species_name': [str(row['species_name'])], 'row': [str(index + 2)],
                             'error': ['no group was found with that ext_id: ' + str(row['landrace_group'])]})], ignore_index=True)
