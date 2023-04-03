@@ -176,6 +176,7 @@ file {crop}_accession.csv
 | species_name     | string  | Name of the species of the accession. Optional.            |
 | crop             | string  | External ID of the crop to which the accession belongs. Mandatory.|
 | landrace_group   | string  | External ID of the group to which the accession belongs. Mandatory. |
+| country          | string  | Iso 2 of the country to which the accession belongs. Mandatory. |
 | institution_name | string  | Name of the institution that holds the accession. Optional.|
 | source_database  | string  | Name of the database where the accession was originally stored. Optional. |
 | latitude         | float   | Latitude of the geographical location where the accession was collected. Mandatory. |
