@@ -3,13 +3,31 @@ from bs4 import BeautifulSoup
 import openpyxl
 from geo.Geoserver import Geoserver
 import os
+import sys
+import pandas as pd
+
 #geoserver data
-geoserver_url = 'https://isa.ciat.cgiar.org/geoserver2'
-username = 'user'
-password = 'pass'
+dir_path = os.path.dirname(os.path.realpath(__file__))
+parent_dir = os.path.abspath(os.path.join(dir_path, ".."))
+path_database = os.path.abspath(os.path.join(parent_dir, 'database.xlsx'))
+
+try:
+    database = pd.read_excel(path_database)
+except Exception as e:
+    print('Problem reading database.xlsx file')
+    print(e)
+    sys.exit(1)
+
+def get_parameter(name, df=database):
+    value = df[df.parameter == name].iloc[0]['value']
+    return str(value)
+
+geoserver_url = get_parameter('geo_url')
+username = get_parameter('user_gs')
+password = get_parameter('pass_gs')
 description=''
-workspace = 'gap_analysis' #the workspace must exist on the geoserver
-image_directory = 'C:/array'
+workspace = get_parameter('workspace_gs') #the workspace must exist on the geoserver
+image_directory = get_parameter('path')
 # create a geoserver instance
 geo = Geoserver(geoserver_url, username=username, password=password)
 
