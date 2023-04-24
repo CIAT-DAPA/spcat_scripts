@@ -8,15 +8,39 @@ sys.path.append(config_dir_path)
 import config as c
 import pandas as pd
 from ormgap import Crop, Group
+from tqdm import tqdm
 
-c.connect_db()
+def read_file( df = None, name_file = '', columns = [] ):
+    file = []
+    if df is not None:
+        file = df
+    else:
+        file_path = os.path.join(c.path_inputs, name_file)
+        if os.path.isfile(file_path):
+            file = pd.read_csv(file_path, encoding='utf8', keep_default_na=False)
+        else:
+            return None
 
-print('The process of importing crops has begun')
+    # Verify that the required columns exist in the DataFrame
+    missing_cols = set(columns) - set(file.columns)
 
-if(os.path.isfile(os.path.join(c.path_inputs, "crops.csv"))):
-    print('crops.csv file found')
-    crops = pd.read_csv(os.path.join(c.path_inputs, "crops.csv"),  encoding='utf8', keep_default_na=False)
+    if len(missing_cols) > 0:
+        raise ValueError(f"Missing required columns in {name_file} file: {', '.join(missing_cols)}")
     
+    return file
+
+def import_crops( data = None):
+
+    print('The process of importing crops has begun')
+
+    try:
+        crops = read_file(data, 'crops.csv', c.cols_crop)
+        if crops is None:
+            print('Could not find crops.csv file')
+            return
+    except ValueError as e:
+        print(f"Error reading crops.csv file: {str(e)}")
+        return
 
     # Create a dataframe to store errors
     errores = pd.DataFrame(columns=['ext_id', 'name', 'base_name', 'app_name', 'error'])
@@ -26,7 +50,7 @@ if(os.path.isfile(os.path.join(c.path_inputs, "crops.csv"))):
     error_count = 0
 
     # Traverse each row of the DataFrame
-    for index, row in crops.iterrows():
+    for index, row in tqdm(crops.iterrows(), total=len(crops)):
         
         try:
             # Create a Crop object with the row data
@@ -44,8 +68,7 @@ if(os.path.isfile(os.path.join(c.path_inputs, "crops.csv"))):
             success_count += 1
 
         except Exception as e:
-            print('Errors found in row #' + str(index + 2) + ', ext_id:' + str(row['ext_id']) + ', name:' + str(row['name']))
-            
+                        
             # Add the row with the error to the error dataframe
             errores = pd.concat([errores, pd.DataFrame(data={'ext_id': [str(row['ext_id'])], 'name': [str(row['name'])], 'base_name': [str(row['base_name'])],
                 'app_name' : [str(row['app_name'])], 'error': [str(e)]})], ignore_index=True)
@@ -68,14 +91,18 @@ if(os.path.isfile(os.path.join(c.path_inputs, "crops.csv"))):
             print(e)
     else:
         print("No errors found")
-else: 
-    print('Could not find crops.csv file')
 
-print('The process of importing groups has begun')
+def import_groups( data = None):
+    print('The process of importing groups has begun')
 
-if(os.path.isfile(os.path.join(c.path_inputs, "groups.csv"))):
-    print('groups.csv file found')
-    groups = pd.read_csv(os.path.join(c.path_inputs, "groups.csv"),  encoding='utf8', keep_default_na=False)
+    try:
+        groups = read_file(data, 'groups.csv', c.cols_group)
+        if groups is None:
+            print('Could not find groups.csv file')
+            return
+    except ValueError as e:
+        print(f"Error reading groups.csv file: {str(e)}")
+        return
 
     # Create a dataframe to store errors
     errores = pd.DataFrame(columns=['ext_id', 'crop', 'group_name', 'error'])
@@ -85,7 +112,7 @@ if(os.path.isfile(os.path.join(c.path_inputs, "groups.csv"))):
     error_count = 0
 
     # Traverse each row of the DataFrame
-    for index, row in groups.iterrows():
+    for index, row in tqdm(groups.iterrows(), total=len(groups)):
         
         try:
             crop = Crop.objects.get(ext_id=str(row['crop']))
@@ -113,7 +140,6 @@ if(os.path.isfile(os.path.join(c.path_inputs, "groups.csv"))):
                 error_count += 1
 
         except Exception as e:
-            print('Errors found in row #' + str(index + 2) + ', ext_id:' + str(row['ext_id']) + ', group_name:' + str(row['group_name']))
             
             # Add the row with the error to the error dataframe
             errores = pd.concat([errores, pd.DataFrame(data={'ext_id': [str(row['ext_id'])], 'group_name': [str(row['group_name'])], 'crop': [str(row['crop'])],
@@ -137,5 +163,9 @@ if(os.path.isfile(os.path.join(c.path_inputs, "groups.csv"))):
             print(e)
     else:
         print("No errors found")
-else: 
-    print('Could not find groups.csv file')
+
+
+if __name__ == '__main__':
+    c.connect_db()
+    import_crops()
+    import_groups()
