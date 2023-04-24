@@ -10,29 +10,29 @@ from config import get_parameter, connect_db
 
 class ConfiguracionTestCase(unittest.TestCase):
     def setUp(self):
-        # Creamos una base de datos de prueba en memoria utilizando pandas
+        # Create an in-memory test database using pandas
         self.test_database = pd.DataFrame({
             'parameter': ['host', 'port', 'user', 'password', 'name_db'],
             'value': ['localhost', '27017', 'testuser', 'testpassword', 'testdb']
         })
         
-        # Mockeamos la función connect de mongoengine para que no se conecte realmente a una base de datos
+        # Mess up the connect function of mongoengine so that it doesn't actually connect to a database
         self.patcher = patch('mongoengine.connect')
         self.mock_connect = self.patcher.start()
         
     def tearDown(self):
-        # Detenemos el mock de la función connect
+        # Stop the mock of the connect function
         self.patcher.stop()
         
     def test_get_parameter(self):
-        # Verificamos que la función get_parameter retorne el valor correcto
+        # Verify that the get_parameter function returns the correct value
         parameter_name = 'user'
         expected_value = 'testuser'
         actual_value = get_parameter(parameter_name, df=self.test_database)
         self.assertEqual(expected_value, actual_value)
         
     def test_connect_db_failure(self):
-        # Verificamos que la función connect_db levante una excepción en caso de error
+        # Verify that the connect_db function raises an exception in case of error
         self.mock_connect.side_effect = Exception('Test exception')
         
         with self.assertRaises(Exception):
