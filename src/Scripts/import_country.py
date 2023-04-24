@@ -1,22 +1,49 @@
 import os
 import sys
+import pandas as pd
+from ormgap import Country
+from tqdm import tqdm
 
 dir_path = os.path.dirname(os.path.realpath(__file__))
 config_dir_path = os.path.abspath(os.path.join(dir_path, '..'))
 sys.path.append(config_dir_path)
 
 import config as c
-import pandas as pd
-from ormgap import Country
 
-c.connect_db()
+def read_countries_file( df = None ):
+    countries = []
+    if df is None:
+        countries_file_path = os.path.join(c.path_inputs, "countries.csv")
+        if os.path.isfile(countries_file_path):
+            countries = pd.read_csv(countries_file_path, encoding='utf8', keep_default_na=False)
+        else:
+            return None
+    else:
+        countries = df
 
-print('The process of importing countries has begun')
+    # Verify that the required columns exist in the DataFrame
+    missing_cols = set(c.cols_country) - set(countries.columns)
 
-if(os.path.isfile(os.path.join(c.path_inputs, "countries.csv"))):
-    print('countries.csv file found')
-    countries = pd.read_csv(os.path.join(c.path_inputs, "countries.csv"),  encoding='utf8', keep_default_na=False)
+    if len(missing_cols) > 0:
+        raise ValueError(f"Missing required columns in countries.csv file: {', '.join(missing_cols)}")
+
+    return countries
+
+
+def import_countries( data = None ):
+
+    print('The process of importing countries has begun')
+
+    try:
+        countries = read_countries_file(data)
+        if countries is None:
+            print('Could not find countries.csv file')
+            return
+    except ValueError as e:
+        print(f"Error reading countries.csv file: {str(e)}")
+        return
     
+    print('countries.csv file found')
 
     # Create a dataframe to store errors
     errores = pd.DataFrame(columns=['iso_2', 'name', 'error'])
@@ -26,7 +53,7 @@ if(os.path.isfile(os.path.join(c.path_inputs, "countries.csv"))):
     error_count = 0
 
     # Traverse each row of the DataFrame
-    for index, row in countries.iterrows():
+    for index, row in tqdm(countries.iterrows(), total=len(countries)):
         
         try:
             # Create a Country object with the row data
@@ -42,7 +69,6 @@ if(os.path.isfile(os.path.join(c.path_inputs, "countries.csv"))):
             success_count += 1
 
         except Exception as e:
-            print('Errors found in row #' + str(index + 2) + ', iso_2:' + str(row['iso_2']) + ', name:' + str(row['name']))
 
             # Add the row with the error to the error dataframe
             errores = pd.concat([errores, pd.DataFrame(data={'iso_2': [str(row['iso_2'])], 'name': [str(row['name'])], 'error': [str(e)]})], ignore_index=True)
@@ -65,6 +91,8 @@ if(os.path.isfile(os.path.join(c.path_inputs, "countries.csv"))):
             print(e)
     else:
         print("No errors found")
-else: 
-    print('Could not find countries.csv file')
+
+if __name__ == '__main__':
+    c.connect_db()
+    import_countries()
             
