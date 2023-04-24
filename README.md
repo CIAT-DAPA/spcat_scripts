@@ -29,6 +29,7 @@ To use the scripts, it is necessary to have an instance of MongoDB running, eith
 - `Inputs/`: This folder contains the input files from where data will be extracted.
 - `Outputs/`: This folder contains the output files generated during the data import process, such as logs.
 - `Scripts/`: This folder contains the Python scripts used for data import.
+- `Data` : This folder contains the shapefile with the political divisions of the countries, this file is used by the script to import the accessions when checking the locations of the accessions.
 
 ## Installation
 

@@ -8,6 +8,8 @@ sys.path.append(config_dir_path)
 
 import config as c
 import pandas as pd
+import geopandas as gpd
+from shapely.geometry import Point
 from tqdm import tqdm
 from ormgap import Crop, Group, Accession, Country
 
@@ -20,6 +22,15 @@ print('The process of importing accessions has begun')
 accession_files = glob.glob(c.path_inputs + '/*accession.csv')
 accession_file_names = [os.path.basename(file) for file in accession_files]
 
+
+# load country shapefile
+countries = gpd.read_file(os.path.join(c.path_data, "Countries.zip"))
+
+countries = countries.to_crs("EPSG:4326")
+
+# select only the necessary columns (ISO2 and geometry)
+countries = countries[["ISO2", "geometry"]]
+
 if not len(accession_files) == 0:
 
     for file in accession_file_names:
@@ -28,12 +39,22 @@ if not len(accession_files) == 0:
         accessions = pd.read_csv(os.path.join(c.path_inputs, file),  encoding='utf8', keep_default_na=False)
         
 
-        # Create a dataframe to store errors
+        # Create a data frame to store errors
         errores = pd.DataFrame(columns=['ext_id', 'species_name', 'row', 'error'])
 
         # Initialize counters
         success_count = 0
         error_count = 0
+
+        # creates a GeoDataFrame with the points corresponding to accessions
+        points = [Point(xy) for xy in zip(accessions["longitude"], accessions["latitude"])]
+        accessions_gdf = gpd.GeoDataFrame(accessions, geometry=points, crs="EPSG:4326")
+
+        # join GeoDataFrames using the sjoin method
+        accessions_by_country = gpd.sjoin(accessions_gdf, countries, how="left", predicate="within")
+
+        # adds the column with the ISO2 for the corresponding country
+        accessions["country"] = accessions_by_country["ISO2"]
 
         # Traverse each row of the DataFrame
         for index, row in tqdm(accessions.iterrows(), total=len(accessions)):
