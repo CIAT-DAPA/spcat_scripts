@@ -100,7 +100,7 @@ def import_accessions(data = None):
 
                                 # Create a Accession object with the row data
                                 accession = Accession(
-                                    ext_id=str(row['ext_id']).strip() +f'_{crop.ext_id}' ,
+                                    ext_id=str(row['ext_id']).strip(),
                                     species_name=str(row['species_name']).strip(),
                                     crop=crop,
                                     country=country,

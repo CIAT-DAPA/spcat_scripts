@@ -24,7 +24,7 @@ class TestImportCountries(unittest.TestCase):
             'country': ['GE', 'GE', 'TM', 'TM', 'TM'],
             'latitude': [41.45, 41.45, 37.95, 37.95, 37.2833],
             'longitude': [44.4667, 44.4667, 58.3667, 58.3667, 62.35],
-            'ext_id': ['ICD_33', 'ICD_34', 'ICD_42', 'ICD_43', 'ICD_45'],
+            'ext_id': ['ICD_33_3', 'ICD_34_3', 'ICD_42_3', 'ICD_43_3', 'ICD_45_3'],
             'source_database': ['icarda', 'icarda', 'icarda', 'icarda', 'icarda'],
             'institution_name': ['ICARDA', 'ICARDA', 'ICARDA', 'ICARDA', 'ICARDA'],
             'accession_id': [16950, 16950, 16954, 16954, 16955]
