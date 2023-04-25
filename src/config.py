@@ -23,6 +23,7 @@ cols_country = ['iso_2', 'name']
 cols_crop = ['ext_id', 'name', 'base_name', 'app_name']
 cols_group = ['group_name', 'crop', 'ext_id']
 cols_accession = ['ext_id', 'species_name', 'crop', 'country', 'landrace_group', 'institution_name', 'source_database', 'latitude', 'longitude', 'accession_id']
+cols_attribute = ['key', 'value', 'accession']
 
 
 def get_parameter(name, df=database):
