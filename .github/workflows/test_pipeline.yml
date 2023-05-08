@@ -23,12 +23,6 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: Set up Docker environment
-      uses: docker-practice/actions-setup-docker@master
-      timeout-minutes: 12
-    - name: Run MongoDB container
-      run: |
-        docker run --name testdb -p 27017:27017 -e MONGO_INITDB_ROOT_USERNAME=testuser -e MONGO_INITDB_ROOT_PASSWORD=testpassword -e MONGO_INITDB_DATABASE=testdb -d mongo:4.2
     - name: Set up Python 3.9
       uses: actions/setup-python@v3
       with:
@@ -50,7 +44,7 @@ jobs:
 # ------- START MERGE PROCCESS -------- #
 
   MergeMainScripts:
-    needs: [TestScripts]
+    needs: TestScripts
     name: Merge Stage with Main
     permissions: write-all
     runs-on: ubuntu-latest
