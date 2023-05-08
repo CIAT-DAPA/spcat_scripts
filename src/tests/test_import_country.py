@@ -70,7 +70,7 @@ class TestImportCountries(unittest.TestCase):
             self.assertIn('Successfully saved 0 rows.', out)
             self.assertIn('Failed to save 3 rows.', out)
 
-            self.assertTrue(os.path.isfile(os.path.join(project_dir_path, 'outputs/country_logs.xlsx')))
+            self.assertTrue(os.path.isfile(os.path.join(project_dir_path, 'Outputs/country_logs.xlsx')))
 
 
 if __name__ == '__main__':

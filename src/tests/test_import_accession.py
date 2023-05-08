@@ -89,6 +89,9 @@ class TestImportCountries(unittest.TestCase):
 
     def test_import_accession(self):
 
+        if not os.path.exists(os.path.join(project_dir_path, 'Inputs')):
+            os.makedirs(os.path.join(project_dir_path, 'Inputs'))
+
         self.df_accessions.to_csv(os.path.join(project_dir_path, 'Inputs','accession.csv'))
 
         # Create and save two country objects
@@ -140,6 +143,10 @@ class TestImportCountries(unittest.TestCase):
 
 
     def test_import_attributes(self):
+
+        if not os.path.exists(os.path.join(project_dir_path, 'Inputs')):
+            os.makedirs(os.path.join(project_dir_path, 'Inputs'))
+
         self.df_attributes.to_csv(os.path.join(project_dir_path, 'Inputs','attribute.csv'))
         with StringIO() as output:
             sys.stdout = output

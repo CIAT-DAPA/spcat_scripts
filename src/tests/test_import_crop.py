@@ -95,7 +95,7 @@ class TestImportCountries(unittest.TestCase):
             self.assertIn('Successfully saved 0 rows.', out)
             self.assertIn('Failed to save 2 rows.', out)
 
-            self.assertTrue(os.path.isfile(os.path.join(project_dir_path, 'outputs/crop_logs.xlsx')))
+            self.assertTrue(os.path.isfile(os.path.join(project_dir_path, 'Outputs/crop_logs.xlsx')))
 
 
     def test_import_groups(self):
@@ -130,7 +130,7 @@ class TestImportCountries(unittest.TestCase):
             self.assertIn('Successfully saved 0 rows.', out)
             self.assertIn('Failed to save 5 rows.', out)
 
-            self.assertTrue(os.path.isfile(os.path.join(project_dir_path, 'outputs/group_logs.xlsx')))
+            self.assertTrue(os.path.isfile(os.path.join(project_dir_path, 'Outputs/group_logs.xlsx')))
 
 
 if __name__ == '__main__':
