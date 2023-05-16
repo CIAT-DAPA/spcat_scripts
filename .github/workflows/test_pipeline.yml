@@ -40,7 +40,7 @@ jobs:
       run: pipwin refresh
 
     - name: Install gdal
-      run: pip install gdal
+      run: pipwin install gdal
 
     - name: Install geoserver-rest
       run: pip install geoserver-rest
