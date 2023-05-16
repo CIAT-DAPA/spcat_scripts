@@ -39,6 +39,9 @@ jobs:
         pipwin refresh
         pip install gdal
         pip install geoserver-rest
+    - name: Install dependencies
+      run: |
+        pip install -r ./src/requirements.txt
     - name: Run Tests
       run: |
         python -m unittest discover -s ./src/tests/ -p 'test_*.py'
