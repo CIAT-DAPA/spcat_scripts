@@ -33,17 +33,11 @@ jobs:
     - name: Active environment
       run: |
         source env/bin/activate
-    - name: Install pipwin
+    - name: Install geoserver dependencies
       run: |
         pip install pipwin
-    - name: refresh pipwin
-      run: |
         pipwin refresh
-    - name: Install gdal
-      run: |
         pip install gdal
-   - name: Install geoserver-rest
-      run: |
         pip install geoserver-rest
     - name: Run Tests
       run: |
