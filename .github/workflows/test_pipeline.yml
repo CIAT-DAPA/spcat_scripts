@@ -33,14 +33,17 @@ jobs:
     - name: Active environment
       run: |
         source env/bin/activate
-    - name: Install pipwin
-      run: pip install pipwin
+    - name: add repository
+      run: sudo add-apt-repository ppa:ubuntugis/ppa
 
-    - name: Refresh pipwin
-      run: pipwin refresh
+    - name: update
+      run: sudo apt update -y; sudo apt upgrade -y;
 
     - name: Install gdal
-      run: pipwin install gdal
+      run: sudo apt install gdal-bin libgdal-dev
+
+    - name: Install pygdal
+      run: sudo apt install gdal-bin libgdal-dev
 
     - name: Install geoserver-rest
       run: pip install geoserver-rest
