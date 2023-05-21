@@ -38,7 +38,7 @@ jobs:
         pip install -r ./src/requirements.txt
     - name: Run Tests
       run: |
-        python -m unittest discover -s ./src/tests/ -p 'test_*.py' -k '^(?!.*import_raster).*test_.*\.py$'
+        python -m unittest discover -s ./src/tests/ -p 'test_*.py' --exclude test_import_raster
 
 
 # ------- END Scripts PROCCESS -------- #    
