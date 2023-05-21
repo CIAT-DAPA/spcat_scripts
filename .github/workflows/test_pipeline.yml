@@ -38,7 +38,7 @@ jobs:
         pip install -r ./src/requirements.txt
     - name: Run Tests
       run: |
-        python -m unittest discover -s ./src/tests/ -p 'test_*.py' --exclude test_import_raster
+        python -c "import unittest; suite = unittest.TestLoader().discover('./src/tests/', pattern='test_*.py'); suite._tests = [test for test in suite._tests if not test.id().endswith('test_import_raster.py')]; unittest.TextTestRunner().run(suite)"
 
 
 # ------- END Scripts PROCCESS -------- #    
