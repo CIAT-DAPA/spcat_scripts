@@ -28,7 +28,10 @@ cols_attribute = ['key', 'value', 'accession']
 
 def get_parameter(name, df=database):
     value = df[df.parameter == name].iloc[0]['value']
-    return str(value)
+    if pd.isnull(value):
+        return None
+    else:
+        return str(value)
 
 def connect_db():
     try:
@@ -38,7 +41,11 @@ def connect_db():
         user = get_parameter('user')
         password = get_parameter('password')
         name_db = get_parameter('name_db')
-        db_url = "mongodb://" + user + ":" + password + "@" + host + ":" + port
+        db_url = "mongodb://"
+        if user and password:
+            db_url += user + ":" + password + "@"
+        db_url += host + ":" + port
+        print('database: ', db_url)
         connection = connect(host=db_url, db=name_db)
         connection.server_info()
         print("Connection to database successful!")

@@ -20,7 +20,7 @@ def read_file( df = None, name_file = '', columns = [] ):
     else:
         file_path = os.path.join(c.path_inputs, name_file)
         if os.path.isfile(file_path):
-            file = pd.read_csv(file_path, encoding='utf8', keep_default_na=False)
+            file = pd.read_csv(file_path, encoding='utf8')
         else:
             return None
 
